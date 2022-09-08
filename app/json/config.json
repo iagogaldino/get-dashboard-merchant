@@ -1,16 +1,16 @@
 {
-    
-    "merchantName": "Rei da Pizza Premium",
-    
-    "categoryProduct": "Super Hotdog Gourmet - 30cm",
-    "product": "Dogão de Calabresa Gourmet - 30 cm.",
+  "merchantName": "XDelssy",
 
-    "city": "Juazeiro",
-    "bairro": "Centro",
-    
-    "email": "iago_galdino@hotmail.com",
-    "pass": "4674495",
-    
-    "phpsessiid": "3a9m5vsh04omqdtl5p67o2nnb7"
+  "categoryProduct": "Hambúrgueres",
+  "product": "Artesanal frango",
 
+  "city": "Juazeiro",
+  "bairro": "Centro",
+
+  "email": "iago_galdino@hotmail.com",
+  "pass": "4674495",
+
+  "phpsessiid": "3a9m5vsh04omqdtl5p67o2nnb7",
+
+  "scriptDeleteOrder": "$(document).click((event)=>{if(typeof $(event.target).context.dataset.id=='string'){row_delete_order_request($(event.target).context.dataset.id,{});}});"
 }

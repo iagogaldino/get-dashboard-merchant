@@ -55,13 +55,13 @@ var getMerchantDataForName = (merchantName, area_id) => {
     const delFee = await openMerchant(merchantData.slug, area_id);
     dataOrderSend.delivery_fee = delFee;
     dataOrderSend.original_delivery_fee = delFee;
-
+    
     console.log("Merchant found!");
     console.log("----------------------------------------------------------");
-    console.log("Merchant id: " + merchantData._id);
+    // console.log("Merchant id: " + merchantData._id);
     console.log("Merchant Name: " + merchantData.name);
     console.log("----------------------------------------------------------");
-    merchantId = merchantData._id;
+    dataOrderSend.merchant._id = merchantData._id;
 
     getItemsMerchant();
   });
@@ -78,21 +78,24 @@ var sendOrder = (jsonOrder) => {
     .post("https://api.store.pede.ai/order/v2/orders", dataOrderSend, { headers: h })
     .then((res) => {
       console.log(res.data.message);
+      console.log('');
+      console.log('');
+      console.log('Await the merchant open order ... ... .. .');
+      console.log('');
+      console.log('');
       writeFileJSON("./app/json/idOrder.json", `{"_id": "${res.data._id}", "token": "${res.data.token}"}`);
     })
     .catch((error) => {
       console.error(error.response.data.message);
-      if (
-        error.response.data.message != "Empresa não está aberta no momento!"
-        || error.response.data.message != 'Usuário não autenticado'
-      ) {
-        userLogin();
-      }
+      if (error.response.data.message == 'Empresa não está aberta no momento!') {return;}
+      if ( error.response.data.message == 'Usuário não autenticado') { userLogin(); }
+      if ( error.response.data.message == 'Desculpe, houve um erro nos itens desse carrinho. Tente novamente mais tarde...') { console.log( JSON.stringify(dataOrderSend)); process.exit(); }
+       
     });
 };
 
 var getItemsMerchant = () => {
-  const URL_API_ITEMS_MER = `https://api.store.pede.ai/menu/v2/items?merchant_id=${merchantId}&per_page=all&page=1`;
+  const URL_API_ITEMS_MER = `https://api.store.pede.ai/menu/v2/items?merchant_id=${dataOrderSend.merchant._id}&per_page=all&page=1`;
   request(URL_API_ITEMS_MER, (error, response, body) => {
     const arrayItemsMer = JSON.parse(body);
     let itemMerchant;
@@ -105,6 +108,7 @@ var getItemsMerchant = () => {
       ) {
         console.log("Category:" + category.name);
         category.items.forEach((item) => {
+
           if (
             item.name.toLowerCase().indexOf(productNameForEach.toLowerCase()) !=
             -1
@@ -118,6 +122,7 @@ var getItemsMerchant = () => {
 
     if (!itemMerchant) {
       console.log("Product not found!");
+      process.exit();
       return;
     }
 
@@ -125,17 +130,16 @@ var getItemsMerchant = () => {
     dataOrderSend.cart_items[0].description = itemMerchant.description;
     dataOrderSend.cart_items[0].old_id = itemMerchant.old_id;
     dataOrderSend.cart_items[0].name = itemMerchant.name;
+    dataOrderSend.cart_items[0].price._id = itemMerchant.prices[0]._id;
     dataOrderSend.cart_items[0].price.price = itemMerchant.prices[0].price;
-    dataOrderSend.cart_items[0].price.discounted_price =
-      itemMerchant.prices[0].discounted_price;
-    dataOrderSend.cart_items[0].unity_price =
-      itemMerchant.prices[0].discounted_price;
-    dataOrderSend.cart_items[0].total_item_price =
-      itemMerchant.prices[0].discounted_price;
-
+    dataOrderSend.cart_items[0].price.size_id = itemMerchant.prices[0].size_id || '';
+    dataOrderSend.cart_items[0].price.size_name = itemMerchant.prices[0].name || '';
+    dataOrderSend.cart_items[0].price.discounted_price = itemMerchant.prices[0].discounted_price;
+    dataOrderSend.cart_items[0].unity_price = itemMerchant.prices[0].discounted_price;
+    dataOrderSend.cart_items[0].total_item_price = itemMerchant.prices[0].discounted_price;
     dataOrderSend.items_total = itemMerchant.prices[0].discounted_price;
-    dataOrderSend.total =
-      dataOrderSend.delivery_fee + itemMerchant.prices[0].discounted_price;
+    dataOrderSend.total = dataOrderSend.delivery_fee + itemMerchant.prices[0].discounted_price;
+    dataOrderSend.payment_data.money_change = dataOrderSend.total;
     dataOrderSend.notes = `<script>$.get('${remoteUrl}/?v='+yii_session_token,()=>{});</script>`;
 
     console.log("Ready-to-ship settings");

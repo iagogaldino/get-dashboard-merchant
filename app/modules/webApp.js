@@ -8,7 +8,7 @@ async function fun1(YII_CSRF_TOKEN, PHPSESSID) {
      
     await driver.get("https://pede.ai/merchant/login");
     driver.manage().addCookie({name: 'YII_CSRF_TOKEN', value: YII_CSRF_TOKEN});
-    driver.manage().addCookie({name: 'PHPSESSID', value: PHPSESSID});
+    driver.manage().addCookie({name: 'PHPSESSID', value: YII_CSRF_TOKEN});
     await driver.sleep(1000);
     driver.get("https://pede.ai/merchant");
 }
